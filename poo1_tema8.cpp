@@ -50,6 +50,9 @@ public:
 
 	// Operatori
 	friend Multime operator+(Multime m1, Multime m2);
+	friend Multime operator-(Multime m1, Multime m2);
+	friend Multime operator*(Multime m1, Multime m2);
+
 };
 
 #pragma region Setere si Getere
@@ -150,7 +153,7 @@ bool Multime::CheckIfSet()
 #pragma endregion
 
 // TODO Le meniu interactiv
-# pragma region Functii
+#pragma region Functii
 
 Multime GetReunion(Multime m1, Multime m2)
 {
@@ -201,7 +204,14 @@ void MainMenu()
 
 # pragma endregion
 
+#pragma region Operatori
 
+Multime operator+ (Multime m1, Multime m2)
+{
+	return GetReunion(m1, m2);
+}
+
+#pragma endregion
 
 int main()
 {
@@ -234,10 +244,9 @@ int main()
 	int v2[6] = {3, 2, 8, 9, 1, 5};
 	Multime m1(4, v1), m2(6, v2), reunionSet;
 
-	reunionSet = GetReunion(m1, m2);
+	reunionSet = m1 + m2;
 
 	reunionSet.DisplaySet(); 
-	
 	// END Al 4-lea ex
 	return 0;
 }
