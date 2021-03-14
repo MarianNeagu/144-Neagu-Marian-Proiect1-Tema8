@@ -31,11 +31,20 @@ public:
 		for(int i = 0; i < m_numberOfNumbers; i++)
 			m_set[i] = array[i];
 	}
-	// TODO Constructor de copiere
+	// Constructor de copiere
+	Multime (const Multime &multime)
+	{
+		m_numberOfNumbers = multime.m_numberOfNumbers;
+		m_set = new int[m_numberOfNumbers];
+		for(int i = 0; i < m_numberOfNumbers; i++)
+			m_set[i] = multime.m_set[i];
+	};
 
 	~Multime()
 	{
 		delete[] m_set;
+		m_set = nullptr;
+
 	}
 
 	// Gets & Sets
@@ -55,6 +64,20 @@ public:
 	friend Multime operator+ (Multime m1, Multime m2);
 	friend Multime operator- (Multime m1, Multime m2);
 	friend Multime operator* (Multime m1, Multime m2);
+	Multime& operator= (const Multime &multime)
+	{
+		// mai intai dezalocam memoria pe care o avea m_set
+		delete[] m_set;
+		m_numberOfNumbers = 0;
+		m_set = nullptr;
+
+		// acum assignment
+		m_numberOfNumbers = multime.m_numberOfNumbers;
+		m_set = new int[m_numberOfNumbers];
+		for(int i = 0; i < m_numberOfNumbers; i++)
+			m_set[i] = multime.m_set[i];
+		return *this;
+	}
 
 };
 
@@ -255,6 +278,7 @@ Multime GetIntersection(Multime m1, Multime m2)
 							intersectionSet.ChangeElementAtIndex(currentIntersectionSetIndex, m1.GetSet()[i]);
 	
 						}
+
 				return intersectionSet;
 			}
 			else
@@ -321,21 +345,18 @@ int main()
 	// Al 4-lea ex
 	int v1[4] = {1, 2, 3, 4};
 	int v2[6] = {2, 4, 5, 6, 7, 8};
-	Multime m1, m2(6), reunionSet, intersectionSet;
+	Multime m1, m2(6);
 	m1.SetNumberOfNumbers(4);
 	m1.SetSet(v1);
 	m2.SetSet(v2);
 
+	Multime reunionSet;
+	Multime intersectionSet;
+	reunionSet.DisplaySet();
+	reunionSet = m1 + m2;
 	intersectionSet = m1 * m2;
 	intersectionSet.DisplaySet();
 
-	
-	
-	//reunionSet = m1 + m2;
-	//reunionSet.DisplaySet(); 
-
-	// intersectionSet = m1 * m2;
-	// intersectionSet.DisplaySet();
 
 	
 	
