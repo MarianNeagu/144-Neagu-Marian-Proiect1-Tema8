@@ -7,11 +7,12 @@ class Multime
 public:
 
 	// Constructori
-	Multime(){m_numberOfNumbers = 0;}
+	Multime(){m_numberOfNumbers = 0;m_set = new int[m_numberOfNumbers];}
 
 	Multime(int numberOfNumbers)
 	{
 		m_numberOfNumbers = numberOfNumbers;
+		m_set = new int[m_numberOfNumbers];
 	}
 	// ASTA NU O SA FIE AICI CA NU VREAU SA AIBE VALORI INITIALE
 	// Multime(int numberOfNumbers, int initialValue)
@@ -42,16 +43,18 @@ public:
 	int* GetSet();
 	void SetNumberOfNumbers(int num);
     void SetSet(int v[]);
+	void InitializeSet(int numberOfNumbers);
 
 	// Metode
+	void ChangeElementAtIndex(int index, int newElem);
 	void ConvertArrayToSet();
 	void DisplaySet();
 	bool CheckIfSet();
 
 	// Operatori
-	friend Multime operator+(Multime m1, Multime m2);
-	friend Multime operator-(Multime m1, Multime m2);
-	friend Multime operator*(Multime m1, Multime m2);
+	friend Multime operator+ (Multime m1, Multime m2);
+	friend Multime operator- (Multime m1, Multime m2);
+	friend Multime operator* (Multime m1, Multime m2);
 
 };
 
@@ -73,7 +76,6 @@ int* Multime::GetSet()
 void Multime::SetNumberOfNumbers(int num)
 {
     m_numberOfNumbers = num;
-	m_set = new int[m_numberOfNumbers];
 }
 
 // Done
@@ -86,6 +88,13 @@ void Multime::SetSet(int v[])
 	}
 	else
 		std::cout<<"EROARE! Numarul de numere din multime nu a fost setat.";
+}
+
+
+void Multime::InitializeSet(int numberOfNumbers)
+{
+	m_numberOfNumbers = numberOfNumbers;
+	m_set = new int[m_numberOfNumbers];
 }
 
 #pragma endregion
@@ -117,12 +126,12 @@ void Multime::ConvertArrayToSet()
 	}
 	if(!doubleValueFound)
 		std::cout<<"Nu s-au gasit duplicate in vector. Vectorul este deja multime."<<std::endl;
-	else
-	{
-		std::cout<<"Vectorul a fost schimbat in multime, duplicatele fiind eliminate."<<std::endl;
-		std::cout<<"Multimea acum are "<<m_numberOfNumbers<<" numere si anume:"<<std::endl;
-		DisplaySet();
-	}
+	// else
+	// {
+	// 	std::cout<<"Vectorul a fost schimbat in multime, duplicatele fiind eliminate."<<std::endl;
+	// 	std::cout<<"Multimea acum are "<<m_numberOfNumbers<<" numere si anume:"<<std::endl;
+	// DisplaySet();
+	// }
 }
 
 void Multime::DisplaySet()
@@ -150,6 +159,14 @@ bool Multime::CheckIfSet()
 	return true;
 }
 
+void Multime::ChangeElementAtIndex(int index, int newElem)
+{
+	if(index >= 0 && index < m_numberOfNumbers)
+		m_set[index] = newElem;
+	else
+		std::cout<<"Indexul introdus nu exista in multime!"<<std::endl;
+}
+
 #pragma endregion
 
 // TODO Le meniu interactiv
@@ -157,46 +174,100 @@ bool Multime::CheckIfSet()
 
 Multime GetReunion(Multime m1, Multime m2)
 {
-	Multime reunionSet;
-
-	if(!m1.CheckIfSet())
-		std::cout<<"Nu s-a putut face reuniunea deoarece primul parametru nu este multime. Folositi functia de conversie inainte pentru acesta!"
-		<<std::endl;
-	else if(!m2.CheckIfSet())
-		std::cout<<"Nu s-a putut face reuniunea deoarece al doilea parametru nu este multime. Folositi functia de conversie inainte pentru acesta!"
-		<<std::endl;
-	else if(!m1.CheckIfSet() && !m2.CheckIfSet())
-		std::cout<<"Nu s-a putut face reuniunea deoarece ambii parametrii nu sunt multimi. Folositi functia de conversie inainte pentru amandoi!"
-		<<std::endl;
-	else
+	if(m1.GetNumberOfNumbers() > 0 || m2.GetNumberOfNumbers() > 0)
 	{
-		reunionSet.SetNumberOfNumbers(m1.GetNumberOfNumbers() + m2.GetNumberOfNumbers());
-		
-		int indexFromTheSecondHalf = m1.GetNumberOfNumbers();
+		Multime reunionSet;
 
-		for (int i = 0; i < m1.GetNumberOfNumbers(); i++)
+		if(!m1.CheckIfSet() && !m2.CheckIfSet())
+			std::cout<<"Nu s-a putut face reuniunea deoarece niciun parametru nu este multime. Folositi functia de conversie inainte pentru ambii!"
+			<<std::endl;
+		else if(!m1.CheckIfSet())
+			std::cout<<"Nu s-a putut face reuniunea deoarece primul parametru nu este multime. Folositi functia de conversie inainte pentru acesta!"
+			<<std::endl;
+		else if(!m2.CheckIfSet())
+			std::cout<<"Nu s-a putut face reuniunea deoarece al doilea parametru nu este multime. Folositi functia de conversie inainte pentru acesta!"
+			<<std::endl;
+		else
+		{
+			reunionSet.InitializeSet(m1.GetNumberOfNumbers() + m2.GetNumberOfNumbers());
+			
+			int indexFromTheSecondHalf = m1.GetNumberOfNumbers();
+
+			for (int i = 0; i < m1.GetNumberOfNumbers(); i++)
+				reunionSet.ChangeElementAtIndex(i, m1.GetSet()[i]);
+
+			for (int i = 0; i < m2.GetNumberOfNumbers(); i++)
 			{
-				reunionSet.GetSet()[i] = m1.GetSet()[i];
-
-			}
-
-		for (int i = 0; i < m2.GetNumberOfNumbers(); i++)
-			{
-				reunionSet.GetSet()[indexFromTheSecondHalf] = m2.GetSet()[i];
+				reunionSet.ChangeElementAtIndex(indexFromTheSecondHalf, m2.GetSet()[i]);
 				indexFromTheSecondHalf++;
 			}
 
-		// Acum reunionSet este practic combinatia dintre cele 2 seturi date
-		// Mai jos convertim (daca e cazul) reunionSet in set (poate exista duplicate)
-		if(!reunionSet.CheckIfSet())
-		{
-			reunionSet.ConvertArrayToSet();
-		}
-	}
+			// Acum reunionSet este practic combinatia dintre cele 2 seturi date
+			// Mai jos convertim (daca e cazul) reunionSet in set (poate exista duplicate)
+			if(!reunionSet.CheckIfSet())
+				reunionSet.ConvertArrayToSet();
 
-	return reunionSet;
+		}
+
+		return reunionSet;
+	}
+	else
+		std::cout<<"Parametrii dati nu au valori."<<std::endl;
+	return 0;
 }
 
+Multime GetIntersection(Multime m1, Multime m2)
+{
+	Multime intersectionSet;
+	if(m1.GetNumberOfNumbers() > 0 || m2.GetNumberOfNumbers() > 0)
+	{
+		
+		int numberOfEqualNumbers = 0;
+		int currentIntersectionSetIndex = -1;
+
+		if(!m1.CheckIfSet() && !m2.CheckIfSet())
+			std::cout<<"Nu s-a putut face interesectia deoarece niciun parametru nu este multime. Folositi functia de conversie inainte pentru ambii!"
+			<<std::endl;
+		else if(!m1.CheckIfSet())
+			std::cout<<"Nu s-a putut face interesectia deoarece primul parametru nu este multime. Folositi functia de conversie inainte pentru acesta!"
+			<<std::endl;
+		else if(!m2.CheckIfSet())
+			std::cout<<"Nu s-a putut face interesectia deoarece al doilea parametru nu este multime. Folositi functia de conversie inainte pentru acesta!"
+			<<std::endl;
+		else
+		{
+			// Mai intai calculam cata memorie trebuie alocata pentru multime
+			for(int i = 0; i < m1.GetNumberOfNumbers(); i++)
+				for(int j = 0; j < m2.GetNumberOfNumbers(); j++)
+					if(m1.GetSet()[i] == m2.GetSet()[j])
+						numberOfEqualNumbers++;
+
+			// Daca exista numere egale atunci alocam memoria necesara si atribuim valorile corespunzatoare
+			if(numberOfEqualNumbers)
+			{
+				intersectionSet.InitializeSet(numberOfEqualNumbers);
+				
+				for(int i = 0; i < m1.GetNumberOfNumbers(); i++)
+					for(int j = 0; j < m2.GetNumberOfNumbers(); j++)
+						if(m1.GetSet()[i] == m2.GetSet()[j])
+						{	
+							currentIntersectionSetIndex++;
+							intersectionSet.ChangeElementAtIndex(currentIntersectionSetIndex, m1.GetSet()[i]);
+	
+						}
+				return intersectionSet;
+			}
+			else
+				std::cout<<"Multimile sunt disjuncte!"<<std::endl;
+
+		}
+	}
+	else
+		std::cout<<"Parametrii dati nu au valori."<<std::endl;
+	return 0;
+}
+
+// TODO
 void MainMenu()
 {
 	
@@ -209,6 +280,59 @@ void MainMenu()
 Multime operator+ (Multime m1, Multime m2)
 {
 	return GetReunion(m1, m2);
+}
+Multime operator- (Multime m1, Multime m2)
+{
+	return GetReunion(m1, m2);
+}
+Multime operator* (Multime m1, Multime m2)
+{
+	if(m1.GetNumberOfNumbers() > 0 || m2.GetNumberOfNumbers() > 0)
+	{
+		Multime intersectionSet;
+		int numberOfEqualNumbers = 0;
+		int currentIntersectionSetIndex = -1;
+
+		if(!m1.CheckIfSet() && !m2.CheckIfSet())
+			std::cout<<"Nu s-a putut face interesectia deoarece niciun parametru nu este multime. Folositi functia de conversie inainte pentru ambii!"
+			<<std::endl;
+		else if(!m1.CheckIfSet())
+			std::cout<<"Nu s-a putut face interesectia deoarece primul parametru nu este multime. Folositi functia de conversie inainte pentru acesta!"
+			<<std::endl;
+		else if(!m2.CheckIfSet())
+			std::cout<<"Nu s-a putut face interesectia deoarece al doilea parametru nu este multime. Folositi functia de conversie inainte pentru acesta!"
+			<<std::endl;
+		else
+		{
+			// Mai intai calculam cata memorie trebuie alocata pentru multime
+			for(int i = 0; i < m1.GetNumberOfNumbers(); i++)
+				for(int j = 0; j < m2.GetNumberOfNumbers(); j++)
+					if(m1.GetSet()[i] == m2.GetSet()[j])
+						numberOfEqualNumbers++;
+
+			// Daca exista numere egale atunci alocam memoria necesara si atribuim valorile corespunzatoare
+			if(numberOfEqualNumbers)
+			{
+				intersectionSet.InitializeSet(numberOfEqualNumbers);
+				
+				for(int i = 0; i < m1.GetNumberOfNumbers(); i++)
+					for(int j = 0; j < m2.GetNumberOfNumbers(); j++)
+						if(m1.GetSet()[i] == m2.GetSet()[j])
+						{	
+							currentIntersectionSetIndex++;
+							intersectionSet.ChangeElementAtIndex(currentIntersectionSetIndex, m1.GetSet()[i]);
+	
+						}
+				return intersectionSet;
+			}
+			else
+				std::cout<<"Multimile sunt disjuncte!"<<std::endl;
+
+		}
+	}
+	else
+		std::cout<<"Parametrii dati nu au valori."<<std::endl;
+	return 0;
 }
 
 #pragma endregion
@@ -240,13 +364,26 @@ int main()
 	// END Al treilea ex
 
 	// Al 4-lea ex
-	int v1[4] = {6, 2, 3, 1};
-	int v2[6] = {3, 2, 8, 9, 1, 5};
-	Multime m1(4, v1), m2(6, v2), reunionSet;
+	int v1[4] = {1, 2, 3, 4};
+	int v2[6] = {2, 4, 5, 6, 7, 8};
+	Multime m1, m2(6), reunionSet, intersectionSet;
+	m1.SetNumberOfNumbers(4);
+	m1.SetSet(v1);
+	m2.SetSet(v2);
 
-	reunionSet = m1 + m2;
+	intersectionSet = m1 * m2;
+	intersectionSet.DisplaySet();
 
-	reunionSet.DisplaySet(); 
+	
+	
+	//reunionSet = m1 + m2;
+	//reunionSet.DisplaySet(); 
+
+	// intersectionSet = m1 * m2;
+	// intersectionSet.DisplaySet();
+
+	
+	
 	// END Al 4-lea ex
 	return 0;
 }
