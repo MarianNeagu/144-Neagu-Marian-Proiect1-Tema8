@@ -281,58 +281,13 @@ Multime operator+ (Multime m1, Multime m2)
 {
 	return GetReunion(m1, m2);
 }
-Multime operator- (Multime m1, Multime m2)
-{
-	return GetReunion(m1, m2);
-}
+// Multime operator- (Multime m1, Multime m2)
+// {
+	
+// }
 Multime operator* (Multime m1, Multime m2)
 {
-	if(m1.GetNumberOfNumbers() > 0 || m2.GetNumberOfNumbers() > 0)
-	{
-		Multime intersectionSet;
-		int numberOfEqualNumbers = 0;
-		int currentIntersectionSetIndex = -1;
-
-		if(!m1.CheckIfSet() && !m2.CheckIfSet())
-			std::cout<<"Nu s-a putut face interesectia deoarece niciun parametru nu este multime. Folositi functia de conversie inainte pentru ambii!"
-			<<std::endl;
-		else if(!m1.CheckIfSet())
-			std::cout<<"Nu s-a putut face interesectia deoarece primul parametru nu este multime. Folositi functia de conversie inainte pentru acesta!"
-			<<std::endl;
-		else if(!m2.CheckIfSet())
-			std::cout<<"Nu s-a putut face interesectia deoarece al doilea parametru nu este multime. Folositi functia de conversie inainte pentru acesta!"
-			<<std::endl;
-		else
-		{
-			// Mai intai calculam cata memorie trebuie alocata pentru multime
-			for(int i = 0; i < m1.GetNumberOfNumbers(); i++)
-				for(int j = 0; j < m2.GetNumberOfNumbers(); j++)
-					if(m1.GetSet()[i] == m2.GetSet()[j])
-						numberOfEqualNumbers++;
-
-			// Daca exista numere egale atunci alocam memoria necesara si atribuim valorile corespunzatoare
-			if(numberOfEqualNumbers)
-			{
-				intersectionSet.InitializeSet(numberOfEqualNumbers);
-				
-				for(int i = 0; i < m1.GetNumberOfNumbers(); i++)
-					for(int j = 0; j < m2.GetNumberOfNumbers(); j++)
-						if(m1.GetSet()[i] == m2.GetSet()[j])
-						{	
-							currentIntersectionSetIndex++;
-							intersectionSet.ChangeElementAtIndex(currentIntersectionSetIndex, m1.GetSet()[i]);
-	
-						}
-				return intersectionSet;
-			}
-			else
-				std::cout<<"Multimile sunt disjuncte!"<<std::endl;
-
-		}
-	}
-	else
-		std::cout<<"Parametrii dati nu au valori."<<std::endl;
-	return 0;
+	return GetIntersection(m1, m2);
 }
 
 #pragma endregion
