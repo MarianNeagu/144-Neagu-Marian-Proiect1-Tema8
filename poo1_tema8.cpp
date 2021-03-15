@@ -212,9 +212,11 @@ void Multime::ChangeElementAtIndex(int index, int newElem)
 
 Multime GetReunion(Multime m1, Multime m2)
 {
+	int v[1] = {0};
+	Multime reunionSet, nullSet(1, v);
 	if(m1.GetNumberOfNumbers() > 0 || m2.GetNumberOfNumbers() > 0)
 	{
-		Multime reunionSet;
+		
 
 		if(!m1.CheckIfSet() && !m2.CheckIfSet())
 			std::cout<<"Nu s-a putut face reuniunea deoarece niciun parametru nu este multime. Folositi comanda de conversie inainte pentru ambii!"
@@ -251,15 +253,17 @@ Multime GetReunion(Multime m1, Multime m2)
 	}
 	else
 		std::cout<<"Parametrii dati nu au valori."<<std::endl;
-	return 0;
+	return nullSet;
 }
 
 Multime GetIntersection(Multime m1, Multime m2)
 {
-	Multime nullSet;
+	int v[1] = {0};
+	Multime intersectionSet, nullSet(1, v);
+	
 	if(m1.GetNumberOfNumbers() > 0 || m2.GetNumberOfNumbers() > 0)
 	{
-		Multime intersectionSet;
+		
 		int numberOfEqualNumbers = 0;
 		int currentIntersectionSetIndex = -1;
 
@@ -297,20 +301,26 @@ Multime GetIntersection(Multime m1, Multime m2)
 				return intersectionSet;
 			}
 			else
-				std::cout<<"Multimile sunt disjuncte!"<<std::endl;
+				std::cout<<"Multimea vida"<<std::endl;
 
 		}
 	}
 	else
 		std::cout<<"Parametrii dati nu au valori."<<std::endl;
-	return 0;
+	
+
+	return nullSet;
 }
 
 Multime GetDifference(Multime m1, Multime m2)
 {
+	int v[1] = {0};
+	Multime differenceSet, nullSet(1,v);
+	
+
 	if(m1.GetNumberOfNumbers() > 0 || m2.GetNumberOfNumbers() > 0)
 	{
-		Multime differenceSet;
+		
 		int numberOfEqualNumbers = 0;
 		int currentIntersectionSetIndex = -1;
 
@@ -357,13 +367,13 @@ Multime GetDifference(Multime m1, Multime m2)
 			}
 			else // diferenta e multimea vida
 			{
-				std::cout<<"Diferenta este multimea vida."<<std::endl;
+				std::cout<<"Multimea vida."<<std::endl;
 			}
 		}
 	}
 	else
 		std::cout<<"Parametrii dati nu au valori."<<std::endl;
-	return 0;
+	return nullSet;
 }
 
 Multime* _ReadTheObjects(int &numberOfObjects)
@@ -494,9 +504,13 @@ void MainMenu(Multime* &multime)
 			std::cin>>indexMultime1;
 			std::cout<<"Introduceti numarul corespunzator celei de-a doua multime: ";
 			std::cin>>indexMultime2;
-			std::cout<<"Reuniunea celor doua multimi este: "<<std::endl;
+			
 			if(multime[indexMultime1 - 1].CheckIfSet() && multime[indexMultime2 - 1].CheckIfSet())
+			{
+				std::cout<<"Reuniunea celor doua multimi este: "<<std::endl;
 				std::cout<<multime[indexMultime1 - 1] + multime[indexMultime2 - 1];
+			}
+				
 
 		}
 		else if(comanda == 5)
@@ -509,9 +523,13 @@ void MainMenu(Multime* &multime)
 			std::cin>>indexMultime1;
 			std::cout<<"Introduceti numarul corespunzator celei de-a doua multime: ";
 			std::cin>>indexMultime2;
-			std::cout<<"Diferenta celor doua multimi este: "<<std::endl;
+			
 			if(multime[indexMultime1 - 1].CheckIfSet() && multime[indexMultime2 - 1].CheckIfSet())
+			{
+				std::cout<<"Diferenta celor doua multimi este: "<<std::endl;
 				std::cout<<multime[indexMultime1 - 1] - multime[indexMultime2 - 1];
+			}
+				
 		}
 		else if(comanda == 6)
 		{
@@ -523,9 +541,13 @@ void MainMenu(Multime* &multime)
 			std::cin>>indexMultime1;
 			std::cout<<"Introduceti numarul corespunzator celei de-a doua multime: ";
 			std::cin>>indexMultime2;
-			std::cout<<"Intersectia celor doua multimi este: "<<std::endl;
+			
 			if(multime[indexMultime1 - 1].CheckIfSet() && multime[indexMultime2 - 1].CheckIfSet())
+			{
+				std::cout<<"Intersectia celor doua multimi este: "<<std::endl;
 				std::cout<<multime[indexMultime1 - 1] * multime[indexMultime2 - 1];
+			}
+			
 		}
 		else if(comanda == 7)
 		{
@@ -537,7 +559,7 @@ void MainMenu(Multime* &multime)
 		else
 			std::cout<<"Comanda introdusa nu este acceptata. Reincercati.."<<std::endl;
 	}
-	std::cout<<comanda;
+	std::cout<<"Iesire..";
 }
 
 # pragma endregion
