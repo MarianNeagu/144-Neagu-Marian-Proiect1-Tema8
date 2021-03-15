@@ -1,11 +1,14 @@
 #include <iostream>
 #include <cstring>
+#include <math.h>
+
+int numberOfObjects_global;
 
 class Multime
 {
 	int m_numberOfNumbers;
 	int* m_set = nullptr;
-public:
+public: 
 
 	// Constructori
 	Multime(){m_numberOfNumbers = 0;m_set = new int[m_numberOfNumbers];}
@@ -215,13 +218,13 @@ Multime GetReunion(Multime m1, Multime m2)
 		Multime reunionSet;
 
 		if(!m1.CheckIfSet() && !m2.CheckIfSet())
-			std::cout<<"Nu s-a putut face reuniunea deoarece niciun parametru nu este multime. Folositi functia de conversie inainte pentru ambii!"
+			std::cout<<"Nu s-a putut face reuniunea deoarece niciun parametru nu este multime. Folositi comanda de conversie inainte pentru ambii!"
 			<<std::endl;
 		else if(!m1.CheckIfSet())
-			std::cout<<"Nu s-a putut face reuniunea deoarece primul parametru nu este multime. Folositi functia de conversie inainte pentru acesta!"
+			std::cout<<"Nu s-a putut face reuniunea deoarece primul parametru nu este multime. Folositi comanda de conversie inainte pentru acesta!"
 			<<std::endl;
 		else if(!m2.CheckIfSet())
-			std::cout<<"Nu s-a putut face reuniunea deoarece al doilea parametru nu este multime. Folositi functia de conversie inainte pentru acesta!"
+			std::cout<<"Nu s-a putut face reuniunea deoarece al doilea parametru nu este multime. Folositi comanda de conversie inainte pentru acesta!"
 			<<std::endl;
 		else
 		{
@@ -254,7 +257,7 @@ Multime GetReunion(Multime m1, Multime m2)
 
 Multime GetIntersection(Multime m1, Multime m2)
 {
-	
+	Multime nullSet;
 	if(m1.GetNumberOfNumbers() > 0 || m2.GetNumberOfNumbers() > 0)
 	{
 		Multime intersectionSet;
@@ -262,13 +265,13 @@ Multime GetIntersection(Multime m1, Multime m2)
 		int currentIntersectionSetIndex = -1;
 
 		if(!m1.CheckIfSet() && !m2.CheckIfSet())
-			std::cout<<"Nu s-a putut face interesectia deoarece niciun parametru nu este multime. Folositi functia de conversie inainte pentru ambii!"
+			std::cout<<"Nu s-a putut face interesectia deoarece niciun parametru nu este multime. Folositi comanda de conversie inainte pentru ambii!"
 			<<std::endl;
 		else if(!m1.CheckIfSet())
-			std::cout<<"Nu s-a putut face interesectia deoarece primul parametru nu este multime. Folositi functia de conversie inainte pentru acesta!"
+			std::cout<<"Nu s-a putut face interesectia deoarece primul parametru nu este multime. Folositi comanda de conversie inainte pentru acesta!"
 			<<std::endl;
 		else if(!m2.CheckIfSet())
-			std::cout<<"Nu s-a putut face interesectia deoarece al doilea parametru nu este multime. Folositi functia de conversie inainte pentru acesta!"
+			std::cout<<"Nu s-a putut face interesectia deoarece al doilea parametru nu este multime. Folositi comanda de conversie inainte pentru acesta!"
 			<<std::endl;
 		else
 		{
@@ -313,13 +316,13 @@ Multime GetDifference(Multime m1, Multime m2)
 		int currentIntersectionSetIndex = -1;
 
 		if(!m1.CheckIfSet() && !m2.CheckIfSet())
-			std::cout<<"Nu s-a putut face diferenta deoarece niciun parametru nu este multime. Folositi functia de conversie inainte pentru ambii!"
+			std::cout<<"Nu s-a putut face diferenta deoarece niciun parametru nu este multime. Folositi comanda de conversie inainte pentru ambii!"
 			<<std::endl;
 		else if(!m1.CheckIfSet())
-			std::cout<<"Nu s-a putut face diferenta deoarece primul parametru nu este multime. Folositi functia de conversie inainte pentru acesta!"
+			std::cout<<"Nu s-a putut face diferenta deoarece primul parametru nu este multime. Folositi comanda de conversie inainte pentru acesta!"
 			<<std::endl;
 		else if(!m2.CheckIfSet())
-			std::cout<<"Nu s-a putut face diferenta deoarece al doilea parametru nu este multime. Folositi functia de conversie inainte pentru acesta!"
+			std::cout<<"Nu s-a putut face diferenta deoarece al doilea parametru nu este multime. Folositi comanda de conversie inainte pentru acesta!"
 			<<std::endl;
 		else
 		{
@@ -389,6 +392,7 @@ Multime* _ReadTheObjects(int &numberOfObjects)
 	std::cout<<"~ Multimile au fost salvate! Cele "<<numberOfObjects<<" multimi citite sunt:"<<std::endl;
 	for(int i = 0; i < numberOfObjects; i++)
 		std::cout<<i+1<<". "<<multime[i];
+	numberOfObjects_global = numberOfObjects;
 	return multime;
 
 }
@@ -408,6 +412,136 @@ void ReadNObjects(Multime* &multime)
 void MainMenu(Multime* &multime)
 {
 	
+	int comanda = -1;
+	
+	while(comanda != 0)
+	{
+		std::cout<<std::endl;
+		std::cout<<"Intoduceti numarul operatiunii pe care doriti sa o executati: "<<std::endl;
+		std::cout<<"0. Iesire"<<std::endl;
+		std::cout<<"1. Afiseaza datele introduse"<<std::endl;
+		std::cout<<"2. Verifica daca un parametru citit este multime"<<std::endl;
+		std::cout<<"3. Conversie din vector in multime a unui parametru citit (elimina duplicatele)"<<std::endl;
+		std::cout<<"4. Reuniunea a doua multimi"<<std::endl;
+		std::cout<<"5. Diferenta a doua multimi"<<std::endl;
+		std::cout<<"6. Intersectia a doua multimi"<<std::endl;
+		std::cout<<"7. Citire a n multimi (Atentie! Multimile salvate la inceput vor fi inlocuite!)"<<std::endl;
+		std::cout<<"Comanda: ";
+		std::cin>>comanda;
+		
+		if(comanda == 0)
+			break;
+		else if(comanda == 1)
+		{
+			std::cout<<"Datele salvate sunt:"<<std::endl;
+			for(int i = 0; i < numberOfObjects_global; i++)
+				std::cout<<i+1<<". "<<multime[i];
+		}
+		else if(comanda == 2)
+		{
+			int indexMultime;
+			std::cout<<"Datele salvate sunt:"<<std::endl;
+			for(int i = 0; i < numberOfObjects_global; i++)
+				std::cout<<i+1<<". "<<multime[i];
+			
+			std::cout<<"Introduceti numarul corespunzator vectorului pe care doriti sa il verificati: ";
+			std::cin>>indexMultime;
+			if(indexMultime >= 0 && indexMultime <= numberOfObjects_global)
+			{
+				if(multime[indexMultime-1].CheckIfSet())
+					std::cout<<"~ Vectorul este multime! ~"<<std::endl;
+				else
+				{
+					char comanda_yn;
+					std::cout<<"~ Vectorul NU este multime! Doriti sa il convertiti in multime? [y/n]: ";
+					std::cin>>comanda_yn;
+					if(toupper(comanda_yn) == 'Y')
+					{
+						multime[indexMultime-1].ConvertArrayToSet();
+						std::cout<<"~ Vectorul a fost convertit in multime! Acum arata astfel:"<<std::endl<<multime[indexMultime-1];
+					}
+				}
+			}
+			else
+				std::cout<<"Numarul introdus nu este valid.."<<std::endl;
+		}
+		else if(comanda == 3)
+		{
+			int indexMultime;
+			std::cout<<"Datele salvate sunt:"<<std::endl;
+			for(int i = 0; i < numberOfObjects_global; i++)
+				std::cout<<i+1<<". "<<multime[i];
+
+			std::cout<<"Introduceti numarul corespunzator vectorului pe care doriti sa il convertiti in multime: ";
+			std::cin>>indexMultime;
+
+			if(indexMultime >= 0 && indexMultime <= numberOfObjects_global)
+			{
+				if(multime[indexMultime-1].CheckIfSet())
+					std::cout<<"~ Vectorul este deja multime! ~"<<std::endl;
+				else
+				{
+					multime[indexMultime-1].ConvertArrayToSet();
+					std::cout<<"~ Vectorul a fost convertit in multime! Acum arata astfel:"<<std::endl<<multime[indexMultime-1];
+				}
+			}
+			else
+				std::cout<<"Numarul introdus nu este valid.."<<std::endl;
+		}
+		else if(comanda == 4)
+		{
+			int indexMultime1, indexMultime2;
+			std::cout<<"Datele salvate sunt:"<<std::endl;
+			for(int i = 0; i < numberOfObjects_global; i++)
+				std::cout<<i+1<<". "<<multime[i];
+			std::cout<<"Introduceti numarul corespunzator primei multimi: ";
+			std::cin>>indexMultime1;
+			std::cout<<"Introduceti numarul corespunzator celei de-a doua multime: ";
+			std::cin>>indexMultime2;
+			std::cout<<"Reuniunea celor doua multimi este: "<<std::endl;
+			if(multime[indexMultime1 - 1].CheckIfSet() && multime[indexMultime2 - 1].CheckIfSet())
+				std::cout<<multime[indexMultime1 - 1] + multime[indexMultime2 - 1];
+
+		}
+		else if(comanda == 5)
+		{
+			int indexMultime1, indexMultime2;
+			std::cout<<"Datele salvate sunt:"<<std::endl;
+			for(int i = 0; i < numberOfObjects_global; i++)
+				std::cout<<i+1<<". "<<multime[i];
+			std::cout<<"Introduceti numarul corespunzator primei multimi: ";
+			std::cin>>indexMultime1;
+			std::cout<<"Introduceti numarul corespunzator celei de-a doua multime: ";
+			std::cin>>indexMultime2;
+			std::cout<<"Diferenta celor doua multimi este: "<<std::endl;
+			if(multime[indexMultime1 - 1].CheckIfSet() && multime[indexMultime2 - 1].CheckIfSet())
+				std::cout<<multime[indexMultime1 - 1] - multime[indexMultime2 - 1];
+		}
+		else if(comanda == 6)
+		{
+			int indexMultime1, indexMultime2;
+			std::cout<<"Datele salvate sunt:"<<std::endl;
+			for(int i = 0; i < numberOfObjects_global; i++)
+				std::cout<<i+1<<". "<<multime[i];
+			std::cout<<"Introduceti numarul corespunzator primei multimi: ";
+			std::cin>>indexMultime1;
+			std::cout<<"Introduceti numarul corespunzator celei de-a doua multime: ";
+			std::cin>>indexMultime2;
+			std::cout<<"Intersectia celor doua multimi este: "<<std::endl;
+			if(multime[indexMultime1 - 1].CheckIfSet() && multime[indexMultime2 - 1].CheckIfSet())
+				std::cout<<multime[indexMultime1 - 1] * multime[indexMultime2 - 1];
+		}
+		else if(comanda == 7)
+		{
+			std::cout<<"test";
+			multime = nullptr;
+			numberOfObjects_global = 0;
+			ReadNObjects(multime);
+		}
+		else
+			std::cout<<"Comanda introdusa nu este acceptata. Reincercati.."<<std::endl;
+	}
+	std::cout<<comanda;
 }
 
 
@@ -453,6 +587,9 @@ std::ostream& operator<< (std::ostream& out, const Multime& multime)
 
 int main()
 {
+
+	
+
 	std::cout<<"Neagu Marian-Madalin - Tema 8. Clasa ~Multime~"<<std::endl<<std::endl;
 	std::cout<<"Introdu y pentru a porni sau n pentru a iesi: ";
 	char comanda;
@@ -467,10 +604,11 @@ int main()
 		std::cin>>comanda;
 	}
 	
-	std::cout<<std::endl<<"~ Pentru inceput este nevoie sa introduceti multimile dorite ~"<<std::endl;
+	std::cout<<std::endl<<"~ Pentru inceput este nevoie sa introduceti multimile dorite ~"<<std::endl<<std::endl;
 
 	Multime* multime;
 	ReadNObjects(multime);
+
 
 	MainMenu(multime);
 
