@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 
 class Multime
 {
@@ -66,10 +67,10 @@ public:
 	void InitializeSet(int numberOfNumbers);
 
 	// Metode
-	void ChangeElementAtIndex(int index, int newElem);
 	void ConvertArrayToSet();
-	void DisplaySet();
+	void DisplaySet(); // nu stiu daca mai are neaparat rost, fiindca am suprascris <<
 	bool CheckIfSet();
+	void ChangeElementAtIndex(int index, int newElem);
 
 	// Operatori
 	friend Multime operator+ (Multime m1, Multime m2);
@@ -89,7 +90,8 @@ public:
 			m_set[i] = multime.m_set[i];
 		return *this;
 	}
-
+	friend std::istream& operator>> (std::istream& in,  Multime& multime);
+	friend std::ostream& operator<< (std::ostream& out, const Multime& multime);
 };
 
 #pragma region Setere si Getere
@@ -361,8 +363,49 @@ Multime GetDifference(Multime m1, Multime m2)
 		std::cout<<"Parametrii dati nu au valori."<<std::endl;
 	return 0;
 }
+
+Multime* _ReadTheObjects(int &numberOfObjects)
+{
+	Multime* multime = new Multime[numberOfObjects];
+
+	for(int i = 0; i < numberOfObjects; i++)
+	{
+		int numberOfNumbers = 0;
+		std::cout<<"~ Multimea curenta de citit este "<<i+1<<" ~"<<std::endl;
+		std::cout<<"Introduceti numarul de valori pe care sa le aiba multimea:"<<std::endl;
+		std::cin>>numberOfNumbers;
+		int* array = new int[numberOfNumbers];
+		std::cout<<"Introduceti elementele multimii"<<std::endl;
+		for(int i = 0; i < numberOfNumbers; i++)
+		{
+			std::cout<<"Elementul "<<i+1<<": ";
+			std::cin>>array[i];
+		}
+		multime[i].SetNumberOfNumbers(numberOfNumbers);
+		multime[i].SetSet(array);
+		std::cout<<"Elementele multimii au fost citite! Multimea "<<i+1<<" este:"<<std::endl;
+		std::cout<<multime[i]<<std::endl;
+	}
+	std::cout<<"~ Multimile au fost salvate! Cele "<<numberOfObjects<<" multimi citite sunt:"<<std::endl;
+	for(int i = 0; i < numberOfObjects; i++)
+		std::cout<<i+1<<". "<<multime[i];
+	return multime;
+
+}
+
+void ReadNObjects(Multime* &multime)
+{
+	int numberOfObjects;
+	
+	std::cout<<"Introduceti numarul de multimi de citit: "<<std::endl;
+	std::cin>>numberOfObjects;
+
+	multime = new Multime[numberOfObjects];
+	multime = _ReadTheObjects(numberOfObjects);
+}
+
 // TODO
-void MainMenu()
+void MainMenu(Multime* &multime)
 {
 	
 }
@@ -385,52 +428,51 @@ Multime operator* (Multime m1, Multime m2)
 	return GetIntersection(m1, m2);
 }
 
+std::istream& operator>> (std::istream& in,  Multime& multime)
+{
+    in>>multime.m_numberOfNumbers;
+	multime.m_set = new int[multime.m_numberOfNumbers];
+    for(int i = 0; i < multime.m_numberOfNumbers; i++)
+		in>>multime.m_set[i];
+	return in;
+}
+
+std::ostream& operator<< (std::ostream& out, const Multime& multime)
+{
+	std::cout<<"{";
+	for(int i = 0; i < multime.m_numberOfNumbers - 1; i++)
+		out<<multime.m_set[i]<<", ";
+
+	out<<multime.m_set[multime.m_numberOfNumbers - 1];
+	std::cout<<"}"<<std::endl;
+
+	return out;
+}
+
 #pragma endregion
 
 int main()
 {
-	// Primul ex
-	// Multime m(4, 0);
-	// m.SetNumberOfNumbers(10);
-	// int v[10] = {6, 2, 3, 2, 2, 3, 5, 8, 3, 6};
-	// m.SetSet(v);
-	// m.ConvertArrayToSet();
-	//END Primul ex
-
-	// Al doilea ex
-	// int v[10] = {6, 2, 3, 2, 2, 3, 5, 8, 3, 6};
-	// Multime m1(4, v);
-	// m1.DisplaySet(); // Pentru asta pur si simplu memoreaza cat ii pui tu la parametru
-	// Multime m2(11, v); 
-	// m2.DisplaySet(); // Pentru asta o sa puna numere random din memorie 
-	// END Al doilea ex
-
-	// Al treilea ex
-	// Multime m(4);
-	// int v[4] = {6, 2, 3, 2};
-	// v[0] = v[3] = 23;
-	// m.SetSet(v);
-	// std::cout<<m.GetSet()[3]<<" "<<m.GetSet()[2]<<std::endl;
-	// END Al treilea ex
-
-	// Al 4-lea ex
-	int v1[4] = {1, 2, 3, 4};
-	int v2[6] = {2, 3, 5, 6, 7, 8};
-	Multime m1, m2(6), reunionSet, intersectionSet, differenceSet;
-	m1.SetNumberOfNumbers(4);
-	m1.SetSet(v1);
-	m2.SetSet(v2);
-
-	differenceSet = m1 - m2;
-	differenceSet.DisplaySet();
-
+	std::cout<<"Neagu Marian-Madalin - Tema 8. Clasa ~Multime~"<<std::endl<<std::endl;
+	std::cout<<"Introdu y pentru a porni sau n pentru a iesi: ";
+	char comanda;
+	std::cin>>comanda;
+	while(toupper(comanda) != 'Y')
+	{
+		if(toupper(comanda) == 'N')
+			return 0;
+		else
+			std::cout<<"Comanda neacceptata.."<<std::endl;
+		std::cout<<"Introdu y pentru a porni sau n pentru a iesi: ";
+		std::cin>>comanda;
+	}
 	
-	// reunionSet = m1 + m2;
-	// intersectionSet = m1 * m2;
-	// reunionSet.DisplaySet();
-	// intersectionSet.DisplaySet();
-	
-	
-	// END Al 4-lea ex
+	std::cout<<std::endl<<"~ Pentru inceput este nevoie sa introduceti multimile dorite ~"<<std::endl;
+
+	Multime* multime;
+	ReadNObjects(multime);
+
+	MainMenu(multime);
+
 	return 0;
 }
