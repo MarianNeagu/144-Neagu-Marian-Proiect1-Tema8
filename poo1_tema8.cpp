@@ -1,6 +1,5 @@
 #include <iostream>
 #include <cstring>
-#include <math.h>
 
 int numberOfObjects_global;
 
@@ -408,12 +407,9 @@ void ReadNObjects(Multime* &multime)
 	multime = _ReadTheObjects(numberOfObjects);
 }
 
-// TODO
 void MainMenu(Multime* &multime)
 {
-	
-	int comanda = -1;
-	
+	int comanda = -1;	
 	while(comanda != 0)
 	{
 		std::cout<<std::endl;
@@ -544,7 +540,6 @@ void MainMenu(Multime* &multime)
 	std::cout<<comanda;
 }
 
-
 # pragma endregion
 
 #pragma region Operatori
@@ -587,9 +582,7 @@ std::ostream& operator<< (std::ostream& out, const Multime& multime)
 
 int main()
 {
-
-	
-
+	// Mesaj la inceput
 	std::cout<<"Neagu Marian-Madalin - Tema 8. Clasa ~Multime~"<<std::endl<<std::endl;
 	std::cout<<"Introdu y pentru a porni sau n pentru a iesi: ";
 	char comanda;
@@ -608,8 +601,6 @@ int main()
 
 	Multime* multime;
 	ReadNObjects(multime);
-
-
 	MainMenu(multime);
 
 	return 0;
