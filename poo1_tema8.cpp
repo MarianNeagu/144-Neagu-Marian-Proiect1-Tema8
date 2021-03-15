@@ -36,14 +36,14 @@ public:
 			m_set[i] = array[i];
 	}
 
-	// ASTA NU O SA FIE AICI CA NU VREAU SA AIBE VALORI INITIALE
-	// Multime(int numberOfNumbers, int initialValue)
-	// {
-	// 	m_numberOfNumbers = numberOfNumbers;
-	// 	m_set = new int[m_numberOfNumbers];
-	// 	for(int i = 0; i < m_numberOfNumbers; i++)
-	// 		m_set[i] = initialValue;
-	// }
+	
+	Multime(int numberOfNumbers, int initialValue)
+	{
+		m_numberOfNumbers = numberOfNumbers;
+		m_set = new int[m_numberOfNumbers];
+		for(int i = 0; i < m_numberOfNumbers; i++)
+			m_set[i] = initialValue;
+	}
 
 	// Constructor de copiere
 	Multime (const Multime &multime)
