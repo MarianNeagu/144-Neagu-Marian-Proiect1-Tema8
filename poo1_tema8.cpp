@@ -9,11 +9,30 @@ public:
 	// Constructori
 	Multime(){m_numberOfNumbers = 0;m_set = new int[m_numberOfNumbers];}
 
+	// Constructor doar cu numberOfNumbers - val vectorului vor fi toate 0
 	Multime(int numberOfNumbers)
 	{
 		m_numberOfNumbers = numberOfNumbers;
 		m_set = new int[m_numberOfNumbers];
+		for(int i = 0; i < m_numberOfNumbers; i++)
+			m_set[i] = 0;
 	}
+	
+	// TODO (optional)
+	// Multime(int array[])
+	// {
+	// 	//m_numberOfNumbers = sizeof(array) / sizeof(array[0]);
+	// }
+
+	// Constructor cu numOfNum si vector - aici elementele vor fi cele din vectorul transmis
+	Multime(int numberOfNumbers, int array[])
+	{
+		m_numberOfNumbers = numberOfNumbers;
+		m_set = new int[m_numberOfNumbers];
+		for(int i = 0; i < m_numberOfNumbers; i++)
+			m_set[i] = array[i];
+	}
+
 	// ASTA NU O SA FIE AICI CA NU VREAU SA AIBE VALORI INITIALE
 	// Multime(int numberOfNumbers, int initialValue)
 	// {
@@ -23,14 +42,6 @@ public:
 	// 		m_set[i] = initialValue;
 	// }
 
-	// TODO Constructor cu numOfNum si vector
-	Multime(int numberOfNumbers, int array[])
-	{
-		m_numberOfNumbers = numberOfNumbers;
-		m_set = new int[m_numberOfNumbers];
-		for(int i = 0; i < m_numberOfNumbers; i++)
-			m_set[i] = array[i];
-	}
 	// Constructor de copiere
 	Multime (const Multime &multime)
 	{
@@ -241,10 +252,10 @@ Multime GetReunion(Multime m1, Multime m2)
 
 Multime GetIntersection(Multime m1, Multime m2)
 {
-	Multime intersectionSet;
+	
 	if(m1.GetNumberOfNumbers() > 0 || m2.GetNumberOfNumbers() > 0)
 	{
-		
+		Multime intersectionSet;
 		int numberOfEqualNumbers = 0;
 		int currentIntersectionSetIndex = -1;
 
@@ -291,11 +302,71 @@ Multime GetIntersection(Multime m1, Multime m2)
 	return 0;
 }
 
+Multime GetDifference(Multime m1, Multime m2)
+{
+	if(m1.GetNumberOfNumbers() > 0 || m2.GetNumberOfNumbers() > 0)
+	{
+		Multime differenceSet;
+		int numberOfEqualNumbers = 0;
+		int currentIntersectionSetIndex = -1;
+
+		if(!m1.CheckIfSet() && !m2.CheckIfSet())
+			std::cout<<"Nu s-a putut face diferenta deoarece niciun parametru nu este multime. Folositi functia de conversie inainte pentru ambii!"
+			<<std::endl;
+		else if(!m1.CheckIfSet())
+			std::cout<<"Nu s-a putut face diferenta deoarece primul parametru nu este multime. Folositi functia de conversie inainte pentru acesta!"
+			<<std::endl;
+		else if(!m2.CheckIfSet())
+			std::cout<<"Nu s-a putut face diferenta deoarece al doilea parametru nu este multime. Folositi functia de conversie inainte pentru acesta!"
+			<<std::endl;
+		else
+		{
+			int numberOfNumbers_differenceSet = 0;
+			// Mai intai cata memorie trebuie alocata pentru setul ce trebuie returnat
+			for(int i = 0; i < m1.GetNumberOfNumbers(); i++)
+			{
+				bool sameElementInBoth = false;
+				for(int j = 0; j < m2.GetNumberOfNumbers(); j++)
+					if(m1.GetSet()[i] == m2.GetSet()[j])
+						sameElementInBoth = true;
+				if(!sameElementInBoth)
+					numberOfNumbers_differenceSet++;
+			}	
+			// Daca exista numere care sunt in m1 dar nu si in m2, atunci atribuim aceste numere multimii noi
+			if(numberOfNumbers_differenceSet)
+			{
+				differenceSet.InitializeSet(numberOfNumbers_differenceSet);
+				int currentIndex = 0;
+				for(int i = 0; i < m1.GetNumberOfNumbers(); i++)
+				{
+					bool sameElementInBoth = false;
+					for(int j = 0; j < m2.GetNumberOfNumbers(); j++)
+						if(m1.GetSet()[i] == m2.GetSet()[j])
+							sameElementInBoth = true;
+					if(!sameElementInBoth)
+					{
+						differenceSet.ChangeElementAtIndex(currentIndex, m1.GetSet()[i]);
+						currentIndex++;
+					}
+				}
+				return differenceSet;
+			}
+			else // diferenta e multimea vida
+			{
+				std::cout<<"Diferenta este multimea vida."<<std::endl;
+			}
+		}
+	}
+	else
+		std::cout<<"Parametrii dati nu au valori."<<std::endl;
+	return 0;
+}
 // TODO
 void MainMenu()
 {
 	
 }
+
 
 # pragma endregion
 
@@ -305,10 +376,10 @@ Multime operator+ (Multime m1, Multime m2)
 {
 	return GetReunion(m1, m2);
 }
-// Multime operator- (Multime m1, Multime m2)
-// {
-	
-// }
+Multime operator- (Multime m1, Multime m2)
+{
+	return GetDifference(m1, m2);	
+}
 Multime operator* (Multime m1, Multime m2)
 {
 	return GetIntersection(m1, m2);
@@ -344,20 +415,20 @@ int main()
 
 	// Al 4-lea ex
 	int v1[4] = {1, 2, 3, 4};
-	int v2[6] = {2, 4, 5, 6, 7, 8};
-	Multime m1, m2(6);
+	int v2[6] = {2, 3, 5, 6, 7, 8};
+	Multime m1, m2(6), reunionSet, intersectionSet, differenceSet;
 	m1.SetNumberOfNumbers(4);
 	m1.SetSet(v1);
 	m2.SetSet(v2);
 
-	Multime reunionSet;
-	Multime intersectionSet;
-	reunionSet.DisplaySet();
-	reunionSet = m1 + m2;
-	intersectionSet = m1 * m2;
-	intersectionSet.DisplaySet();
+	differenceSet = m1 - m2;
+	differenceSet.DisplaySet();
 
-
+	
+	// reunionSet = m1 + m2;
+	// intersectionSet = m1 * m2;
+	// reunionSet.DisplaySet();
+	// intersectionSet.DisplaySet();
 	
 	
 	// END Al 4-lea ex
