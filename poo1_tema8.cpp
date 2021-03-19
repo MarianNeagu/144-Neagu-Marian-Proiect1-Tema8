@@ -34,6 +34,26 @@ public:
 		m_set = new int[m_numberOfNumbers];
 		for(int i = 0; i < m_numberOfNumbers; i++)
 			m_set[i] = array[i];
+		
+
+		// Completare convertToSet
+		bool doubleValueFound = false;
+
+		for(int i = 0; i < m_numberOfNumbers - 1; i ++)
+			for(int j = i + 1; j < m_numberOfNumbers; j++)
+			{
+				if (m_set[i] == m_set[j])
+				{
+					doubleValueFound = true;
+					for(int k = j; k < m_numberOfNumbers - 1; k++)
+					{
+						m_set[k] = m_set[k+1];
+					}
+
+					m_numberOfNumbers --;
+					j--;
+				}
+			}
 	}
 
 	
@@ -73,6 +93,7 @@ public:
 	void DisplaySet(); // nu stiu daca mai are neaparat rost, fiindca am suprascris <<
 	bool CheckIfSet();
 	void ChangeElementAtIndex(int index, int newElem);
+	void ReinitialiseSet(int numberOfNumbers, int array[]);
 
 	// Operatori
 	friend Multime operator+ (Multime m1, Multime m2);
@@ -131,6 +152,9 @@ void Multime::SetSet(int v[])
 
 void Multime::InitializeSet(int numberOfNumbers)
 {
+	m_numberOfNumbers = 0;
+	delete[] m_set;
+	m_set = nullptr;
 	m_numberOfNumbers = numberOfNumbers;
 	m_set = new int[m_numberOfNumbers];
 }
@@ -162,8 +186,8 @@ void Multime::ConvertArrayToSet()
 				}
 			}
 	}
-	if(!doubleValueFound)
-		std::cout<<"Nu s-au gasit duplicate in vector. Vectorul este deja multime."<<std::endl;
+	// if(!doubleValueFound)
+	// 	std::cout<<"Nu s-au gasit duplicate in vector. Vectorul este deja multime."<<std::endl;
 	// else
 	// {
 	// 	std::cout<<"Vectorul a fost schimbat in multime, duplicatele fiind eliminate."<<std::endl;
@@ -203,6 +227,21 @@ void Multime::ChangeElementAtIndex(int index, int newElem)
 		m_set[index] = newElem;
 	else
 		std::cout<<"Indexul introdus nu exista in multime!"<<std::endl;
+}
+
+void Multime::ReinitialiseSet(int numberOfNumbers, int array[])
+{
+	m_numberOfNumbers = 0;
+	delete[] m_set;
+	m_set = nullptr;
+
+	m_numberOfNumbers = numberOfNumbers;	
+	m_set = new int[m_numberOfNumbers];
+
+	for(int i = 0; i < m_numberOfNumbers; i++)
+		m_set[i] = array[i];
+	
+	ConvertArrayToSet();
 }
 
 #pragma endregion
@@ -393,8 +432,13 @@ Multime* _ReadTheObjects(int &numberOfObjects)
 			std::cout<<"Elementul "<<i+1<<": ";
 			std::cin>>array[i];
 		}
-		multime[i].SetNumberOfNumbers(numberOfNumbers);
-		multime[i].SetSet(array);
+		
+		// multime[i].SetNumberOfNumbers(numberOfNumbers);
+		// multime[i].SetSet(array);
+
+		Multime multime_temp(numberOfNumbers, array);
+		multime[i] = multime_temp;
+
 		std::cout<<"Elementele multimii au fost citite! Multimea "<<i+1<<" este:"<<std::endl;
 		std::cout<<multime[i]<<std::endl;
 	}
@@ -581,6 +625,9 @@ Multime operator* (Multime m1, Multime m2)
 
 std::istream& operator>> (std::istream& in,  Multime& multime)
 {
+	delete[] multime.m_set;
+	multime.m_numberOfNumbers = 0;
+	multime.m_set = nullptr;
     in>>multime.m_numberOfNumbers;
 	multime.m_set = new int[multime.m_numberOfNumbers];
     for(int i = 0; i < multime.m_numberOfNumbers; i++)
@@ -602,8 +649,23 @@ std::ostream& operator<< (std::ostream& out, const Multime& multime)
 
 #pragma endregion
 
+
+void Demo()
+{
+	int v1[5] = {1,2,1,2,3};
+	Multime m(5,v1);
+	std::cout<<m<<std::endl;
+
+	int v2[3] = {1,2, 2};
+	m.ReinitialiseSet(3, v2);
+	std::cout<<m<<std::endl;
+}
+
 int main()
 {
+
+	Demo();
+
 	// Mesaj la inceput
 	std::cout<<"Neagu Marian-Madalin - Tema 8. Clasa ~Multime~"<<std::endl<<std::endl;
 	std::cout<<"Introdu y pentru a porni sau n pentru a iesi: ";
